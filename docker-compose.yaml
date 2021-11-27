@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8
+    ports:
+      - '9403:3306'
+    volumes:
+      - ./datadir:/var/lib/mysql
+      - ./db_dump:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+       MYSQL_DATABASE: "django_test"
+       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+  node:
+    build:
+      context: ./dockerfiles
+      dockerfile: node.dockerfile
+    tty: true
+  web:
+    build:
+      context: ./dockerfiles
+      dockerfile: python.dockerfile
+    tty: true
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src:/usr/local/src/app
+    ports:
+      - "9402:8000"
+    depends_on:
+      - db
