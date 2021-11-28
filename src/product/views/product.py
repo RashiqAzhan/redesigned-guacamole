@@ -2,6 +2,8 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.views import generic
 from product.models import ProductVariant, ProductVariantPrice, Variant
+from product.serializers import ProductVariantPriceSerializer
+from rest_framework import generics
 
 
 class IndexView(generic.ListView):
@@ -47,6 +49,17 @@ class IndexView(generic.ListView):
             context['size_variants'] = size_query
             context['style_variants'] = style_query
         return context
+
+
+class APIIndexView(generics.ListCreateAPIView):
+    queryset = ProductVariantPrice.objects.all()
+    serializer_class = ProductVariantPriceSerializer
+
+
+class APIDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ProductVariantPrice.objects.all()
+    serializer_class = ProductVariantPriceSerializer
+
 
 class CreateProductView(generic.TemplateView):
     template_name = 'products/create.html'

@@ -1,5 +1,5 @@
 from django.urls import path
-from product.views.product import CreateProductView, IndexView
+from product.views.product import APIDetailView, APIIndexView, CreateProductView, IndexView
 from product.views.variant import VariantCreateView, VariantEditView, VariantView
 
 
@@ -16,4 +16,6 @@ urlpatterns = [
     path('list/', IndexView.as_view(template_name='products/list.html', extra_context={
         'product': True
     }), name='list.product'),
+    path('api/products/', APIIndexView.as_view(), name='api.products'),
+    path('api/product/<int:pk>', APIDetailView.as_view(), name='api.update.product'),
 ]

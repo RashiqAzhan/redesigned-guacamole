@@ -9,6 +9,7 @@ django-dotenv = "*"
 mysqlclient = "*"
 django-extensions = "*"
 djangorestframework = "*"
+drf-writable-nested = "*"
 
 [dev-packages]
 

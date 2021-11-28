@@ -40,8 +40,9 @@
                 <div class="form-group">
                   <label for="">Option</label>
                   <select v-model="item.option" class="form-control">
-                    <option v-for="variant in variants"
-                            :value="variant.id">
+                    <option
+                        v-for="variant in variants"
+                        :value="variant.id">
                       {{ variant.title }}
                     </option>
                   </select>
@@ -49,9 +50,10 @@
               </div>
               <div class="col-md-8">
                 <div class="form-group">
-                  <label v-if="product_variant.length != 1" @click="product_variant.splice(index,1); checkVariant"
-                         class="float-right text-primary"
-                         style="cursor: pointer;">Remove</label>
+                  <label
+                      v-if="product_variant.length != 1" @click="product_variant.splice(index,1); checkVariant"
+                      class="float-right text-primary"
+                      style="cursor: pointer;">Remove</label>
                   <label v-else for="">.</label>
                   <input-tag v-model="item.tags" @input="checkVariant" class="form-control"></input-tag>
                 </div>
@@ -97,54 +99,55 @@
 </template>
 
 <script>
-import vue2Dropzone from 'vue2-dropzone'
-import 'vue2-dropzone/dist/vue2Dropzone.min.css'
-import InputTag from 'vue-input-tag'
+import axios        from "axios";
+import InputTag     from "vue-input-tag";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 
 export default {
   components: {
     vueDropzone: vue2Dropzone,
-    InputTag
+    InputTag,
   },
-  props: {
+  props     : {
     variants: {
-      type: Array,
-      required: true
-    }
+      type    : Array,
+      required: true,
+    },
   },
   data() {
     return {
-      product_name: '',
-      product_sku: '',
-      description: '',
-      images: [],
-      product_variant: [
+      product_name          : "",
+      product_sku           : "",
+      description           : "",
+      images                : [],
+      product_variant       : [
         {
           option: this.variants[0].id,
-          tags: []
-        }
+          tags  : [],
+        },
       ],
       product_variant_prices: [],
-      dropzoneOptions: {
-        url: 'https://httpbin.org/post',
+      dropzoneOptions       : {
+        url           : "https://httpbin.org/post",
         thumbnailWidth: 150,
-        maxFilesize: 0.5,
-        headers: {"My-Awesome-Header": "header value"}
-      }
-    }
+        maxFilesize   : 0.5,
+        headers       : {"My-Awesome-Header": "header value"},
+      },
+    };
   },
   methods: {
     // it will push a new object into product variant
     newVariant() {
-      let all_variants = this.variants.map(el => el.id)
+      let all_variants = this.variants.map(el => el.id);
       let selected_variants = this.product_variant.map(el => el.option);
-      let available_variants = all_variants.filter(entry1 => !selected_variants.some(entry2 => entry1 == entry2))
+      let available_variants = all_variants.filter(entry1 => !selected_variants.some(entry2 => entry1 == entry2));
       // console.log(available_variants)
 
       this.product_variant.push({
         option: available_variants[0],
-        tags: []
-      })
+        tags  : [],
+      });
     },
 
     // check the variant and render all the combination
@@ -153,26 +156,26 @@ export default {
       this.product_variant_prices = [];
       this.product_variant.filter((item) => {
         tags.push(item.tags);
-      })
+      });
 
       this.getCombn(tags).forEach(item => {
         this.product_variant_prices.push({
           title: item,
           price: 0,
-          stock: 0
-        })
-      })
+          stock: 0,
+        });
+      });
     },
 
     // combination algorithm
     getCombn(arr, pre) {
-      pre = pre || '';
+      pre = pre || "";
       if (!arr.length) {
         return pre;
       }
       let self = this;
       let ans = arr[0].reduce(function (ans, value) {
-        return ans.concat(self.getCombn(arr.slice(1), pre + value + '/'));
+        return ans.concat(self.getCombn(arr.slice(1), pre + value + "/"));
       }, []);
       return ans;
     },
@@ -180,28 +183,28 @@ export default {
     // store product into database
     saveProduct() {
       let product = {
-        title: this.product_name,
-        sku: this.product_sku,
-        description: this.description,
-        product_image: this.images,
-        product_variant: this.product_variant,
-        product_variant_prices: this.product_variant_prices
-      }
+        title                 : this.product_name,
+        sku                   : this.product_sku,
+        description           : this.description,
+        product_image         : this.images,
+        product_variant       : this.product_variant,
+        product_variant_prices: this.product_variant_prices,
+      };
 
 
-      axios.post('/product', product).then(response => {
+      axios.post("/product", product).then(response => {
         console.log(response.data);
       }).catch(error => {
         console.log(error);
-      })
+      });
 
       console.log(product);
-    }
+    },
 
 
   },
   mounted() {
-    console.log('Component mounted.')
-  }
-}
+    console.log("Component mounted.");
+  },
+};
 </script>
