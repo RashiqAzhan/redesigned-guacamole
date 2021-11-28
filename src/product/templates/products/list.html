@@ -18,7 +18,18 @@
         <div class="col-md-2">
           <select name="variant" id="" class="form-control">
             <option selected disabled>--Select A Variant--</option>
-
+            <option disabled>Color</option>
+            {% for color_variant in color_variants %}
+              <option value={{ color_variant }}>{{ color_variant }}</option>
+            {% endfor %}
+            <option disabled>Value</option>
+            {% for size_variant in size_variants %}
+              <option value={{ size_variant }}>{{ size_variant }}</option>
+            {% endfor %}
+            <option disabled>Style</option>
+            {% for style_variant in style_variants %}
+              <option value={{ style_variant }}>{{ style_variant }}</option>
+            {% endfor %}
           </select>
         </div>
 
@@ -97,10 +108,6 @@
         <div class="col-md-6">
           <div class="pagination">
             <span class="step-links">
-              {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo; first</a>
-                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-              {% endif %}
               <span class="current">
                 Showing {{ page_obj.number }} to {{ page_obj.next_page_number }} out
                 of {{ page_obj.paginator.num_pages }}.
