@@ -61,7 +61,7 @@
             </div>
           </div>
           <div class="card-footer" v-if="product_variant.length < variants.length && product_variant.length < 3">
-            <button @click="newVariant" class="btn btn-primary">Add another option</button>
+            <button @click="newVariant(); checkVariant();" class="btn btn-primary">Add another option</button>
           </div>
 
           <div class="card-header text-uppercase">Preview</div>
@@ -191,8 +191,9 @@ export default {
         product_variant_prices: this.product_variant_prices,
       };
 
-
-      axios.post("/product", product).then(response => {
+      axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+      axios.defaults.xsrfCookieName = "csrftoken";
+      axios.post("/product/api/products/", product).then(response => {
         console.log(response.data);
       }).catch(error => {
         console.log(error);
@@ -205,6 +206,9 @@ export default {
   },
   mounted() {
     console.log("Component mounted.");
+    axios
+        .get("/product/api/product/1")
+        .then(response => (this.info = response));
   },
 };
 </script>

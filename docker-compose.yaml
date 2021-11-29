@@ -16,6 +16,8 @@ services:
       context: ./dockerfiles
       dockerfile: node.dockerfile
     tty: true
+    volumes:
+      - ./src:/usr/local/src/app
   web:
     build:
       context: ./dockerfiles
